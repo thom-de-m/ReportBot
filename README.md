@@ -1,0 +1,1 @@
+A discord bot used for reporting bugs

@@ -1,0 +1,25 @@
+{
+	"token": "Your token!",
+	"channel_to_post_in": "Your channel!",
+	"reply_timeout_in_seconds": 60,
+	"report_cooldown_in_seconds": 120,
+	"goodbye_message": "Thanks for reporting this bug, enjoy the rest of your day! \nJust send another message to me to post a different bug when your %COOLDOWN% seconds of cooldown are over.",
+	"timeout_message": "**Cancelling bug report because of too late answer...**",
+	"submitted_by_message": "**Submitted by user:** %USER%",
+	"cooldown_message": "You're still on a cooldown for %COOLDOWN% seconds!",
+	"welcome_message": "Hello, in order to post your bug I will need some more information from you! \nI'll ask some questions and you may answer them if you like to. \nJust remember that you'll only have %TIMEOUT% seconds for every question, otherwise I'll close this DM!",
+	"questions": [
+		{
+			"question": "**What's the bug title?**",
+			"display": "**Bug title:**"
+		},
+		{
+			"question": "**Are you using a PC or Console?**",
+			"display": "**Platform:**"
+		},
+		{
+			"question": "**Explain the bug in as much detail as possible!**",
+			"display": "**Details:**"
+		}
+	]
+}

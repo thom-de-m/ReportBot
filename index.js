@@ -37,6 +37,24 @@ function setTimer(message) {
   }, config.reply_timeout_in_seconds * 1000);
 }
 
+function validateAnswer(report, message) {
+  let json = config.questions[report.current_question - 1].answers_possible;
+  if (!json) return true;
+  
+  for (let i = 0; i < json.length; i++) {
+	if (message.content.toUpperCase() !== json[i].toUpperCase()) continue;
+	return true;
+  }
+  
+  let answer = config.questions[report.current_question - 1].wrong_possible_answer;
+  for (let i = 0; i < json.length; i++) {
+	answer += '\n' + json[i];
+  }
+  
+  message.reply(answer);
+  return false;
+}
+
 function saveAnswerAndRespondIfNeeded(report, message, newQuestion) {
   report.answers[report.current_question - 1] = message.content;
   clearTimeout(report.timeout);
@@ -76,7 +94,9 @@ client.on('message', message => {
 	  client.channels.get(config.channel_to_post_in).send(getFormattedReport(report, message.author.id));
 	  usersOnCooldown.set(message.author.id, Date.now());
 	} else {
-	  saveAnswerAndRespondIfNeeded(report, message, true);
+	  if (validateAnswer(report, message)) {
+		saveAnswerAndRespondIfNeeded(report, message, true);
+	  }
 	}
   } else {
     currentReports.set(message.author.id, {

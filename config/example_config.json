@@ -15,7 +15,12 @@
 		},
 		{
 			"question": "**Are you using a PC or Console?**",
-			"display": "**Platform:**"
+			"display": "**Platform:**",
+			"answers_possible": [
+				"pc",
+				"console"
+			],
+			"wrong_possible_answer": "**You can only enter the following answers!**"
 		},
 		{
 			"question": "**Explain the bug in as much detail as possible!**",

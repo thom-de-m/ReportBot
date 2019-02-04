@@ -21,10 +21,20 @@ if (config.questions.length == 0) {
 
 function getFormattedReport(report, user) {
   let reportString = '';
+  let attachments = '';
   for (let i = 0; i < config.questions.length; i++) {
-    reportString += config.questions[i].display + '\n' + report.answers[i] + '\n\n';
+	if (report.answers[i].attachments) {
+	  report.answers[i].attachments.forEach(value => {
+		attachments += '\n' + value.url;
+	  });
+	}
+    reportString += config.questions[i].display + '\n' + report.answers[i].content + '\n\n';
   }
   
+  if (attachments) {
+	reportString += config.attachments_message + attachments + '\n\n';
+  }
+	
   reportString += config.submitted_by_message.replace('%USER%', '<@' + user + '>');
   
   return reportString;
@@ -56,7 +66,7 @@ function validateAnswer(report, message) {
 }
 
 function saveAnswerAndRespondIfNeeded(report, message, newQuestion) {
-  report.answers[report.current_question - 1] = message.content;
+  report.answers[report.current_question - 1] = message;
   clearTimeout(report.timeout);
   
   if (newQuestion) {

@@ -1,5 +1,5 @@
-const discord = require('discord.js');
-const client = new discord.Client();
+const Discord = require('discord.js');
+const client = new Discord.Client();
 const config = require('./config/config.json');
 
 const currentReports = new Map();
@@ -13,7 +13,7 @@ client.login(config.token).then(() => {
   process.exit(1);
 });
 
-if (config.questions.length == 0) {
+if (config.questions.length === 0) {
   console.log("Questions can't be empty!");
   process.exit(1);
   return;

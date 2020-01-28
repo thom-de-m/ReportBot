@@ -6,8 +6,11 @@ When using this you **must create a config.json** in the **config directory**, j
 | --- | --- |
 | token | This is the token for your Discord bot. |
 | channel_to_post_in | This is the channel in which the bot should post bug reports, make sure this is the channel ID and the bot can write to the channel. | 
+| max_attachments | The max attachments a user can upload for a report. |
 | reply_timeout_in_seconds | The timeout in seconds after which the bot will shutdown the bug report. |
 | report_cooldown_in_seconds | The timeout in seconds after which a user can report a new bug. |
+| uploaded_attachment | The message which will be displayed when a user has submitted an attachment. |
+| max_attachments_reached | The message which will be displayed when a user has reached the max amount of attachments for this report. |
 | attachments_message | The style for the message which will be displayed when an attachment is posted in the bug report. |
 | goodbye_message | The message which will be displayed when a bug report has been finished. |
 | timeout_message | The message which will be displayed when a user is taking too long to answer a question. |

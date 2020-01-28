@@ -2,12 +2,11 @@ function formattedReport(report, user, config) {
   let reportString = '';
   let attachments = '';
   for (let i = 0; i < config.questions.length; i++) {
-	if (report.answers[i].attachments) {
-	  report.answers[i].attachments.forEach(value => {
-		attachments += '\n' + value.url;
-	  });
-	}
-    reportString += config.questions[i].display + '\n' + report.answers[i].content + '\n\n';
+    reportString += config.questions[i].display + '\n' + report.answers[i] + '\n\n';
+  }
+  
+  for (let i = 0; i < report.attachments_used; i++) {
+	attachments += '\n' + report.attachments[i];
   }
   
   if (attachments) {
@@ -50,7 +49,7 @@ function setTimer(message, currentReports, config) {
 }
 
 function saveAnswerAndRespondIfNeeded(report, message, newQuestion, config, currentReports) {
-  report.answers[report.current_question - 1] = message;
+  report.answers[report.current_question - 1] = message.content;
   clearTimeout(report.timeout);
   
   if (newQuestion) {
@@ -60,6 +59,30 @@ function saveAnswerAndRespondIfNeeded(report, message, newQuestion, config, curr
   
   report.current_question += 1;
   currentReports.set(message.author.id, report);
+}
+
+function handleAttachmentMessage(report, message, config) {
+  if (message.attachments.size > 0) {
+	  for (let attachment of message.attachments.values()) {
+		  if (report.attachments_used !== config.max_attachments) {
+		    report.attachments[report.attachments_used] = attachment.url;
+			report.attachments_used += 1;
+			if (report.attachments_used === config.max_attachments) {
+		      handleMessageException(message.reply(config.max_attachments_reached));
+			  return false;
+			} else {
+			  handleMessageException(message.reply(config.uploaded_attachment.replace('%ATTACHMENTS_LEFT%', config.max_attachments - report.attachments_used)));	
+			}
+		  } else {
+			handleMessageException(message.reply(config.max_attachments_reached));
+			return false;
+		  }
+	  }
+	  
+	  return false;
+  }
+  
+  return true;
 }
 
 module.exports.handleCooldown = function(userTime, message, config) {
@@ -84,7 +107,7 @@ module.exports.handlePostReport = function(currentReports, usersOnCooldown, mess
 	  
 	handleMessageException(client.channels.get(config.channel_to_post_in).send(formattedReport(report, message.author.id, config)));
 	usersOnCooldown.set(message.author.id, Date.now());
-  } else if (validateAnswer(report, message, config)) {
+  } else if (handleAttachmentMessage(report, message, config) && validateAnswer(report, message, config)) {
 	saveAnswerAndRespondIfNeeded(report, message, true, config, currentReports);
   }
 }
@@ -93,7 +116,9 @@ module.exports.handleFirstBotReply = function(currentReports, message, config) {
   currentReports.set(message.author.id, {
 	current_question: 1,
 	answers: [config.questions.length],
-	timeout: setTimer(message, currentReports, config)
+	timeout: setTimer(message, currentReports, config),
+	attachments_used: 0,
+	attachments: [config.max_attachments]
   });
 	  
   handleMessageException(message.reply(config.welcome_message.replace('%TIMEOUT%', config.reply_timeout_in_seconds) + '\n\n' + config.questions[0].question));

@@ -4,14 +4,16 @@
 	"max_attachments": 3,
 	"reply_timeout_in_seconds": 60,
 	"report_cooldown_in_seconds": 120,
-	"uploaded_attachment": "You've uploaded an attachment, you can only upload %ATTACHMENTS_LEFT% more attachment(s).\nIf you're ready, you may continue answering the question!",
-	"max_attachments_reached": "You've reached the max attachments you can use!",
+	"uploaded_attachment": "You've uploaded an attachment, you can only upload %ATTACHMENTS_LEFT% more attachment(s).\nIf you're ready you may continue answering the question!",
+	"max_attachments_reached": "You already reached the limit for attachments you can upload!\nIf you're ready you may continue answering the question!",
+	"last_attachment_reached": "You've reached the last attachment you can upload!\nIf you're ready you may continue answering the question!",
 	"attachments_message": "**Attachments:**",
 	"goodbye_message": "Thanks for submitting!\nJust send another message to me to post a different bug when your %COOLDOWN% seconds of cooldown are over.",
 	"timeout_message": "**Cancelling bug report because time expired...**",
 	"submitted_by_message": "**Submitted by user:** %USER%\n\n**Send me a private message and say hi to report a bug!**",
 	"cooldown_message": "You're still on a cooldown for %COOLDOWN% seconds!",
 	"welcome_message": "Hello, in order to post your bug I will need some more information from you!\nI'll ask some questions and you may answer them if you like to.\n\nJust remember that you'll only have %TIMEOUT% seconds for every question, otherwise I'll close this DM!\nAlso you can upload an attachment at any question!",
+	"error_message_sending_report": "**Woops, something went wrong while sending your report. You probably used too much text!**",
 	"questions": [
 		{
 			"question": "**What's the bug title?**",

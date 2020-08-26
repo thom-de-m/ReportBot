@@ -6,11 +6,11 @@ function formattedReport(report, user, config) {
   }
   
   for (let i = 0; i < report.attachments_used; i++) {
-	attachments += '\n' + report.attachments[i];
+	  attachments += '\n' + report.attachments[i];
   }
   
   if (attachments) {
-	reportString += config.attachments_message + attachments + '\n\n';
+	  reportString += config.attachments_message + attachments + '\n\n';
   }
 	
   reportString = reportString.split('@').join('');
@@ -34,7 +34,7 @@ function validateAnswer(report, message, config) {
   
   let answer = config.questions[report.current_question - 1].wrong_possible_answer;
   for (let i = 0; i < json.length; i++) {
-	answer += '\n' + json[i];
+	  answer += '\n' + json[i];
   }
   
   handleMessageException(message.reply(answer));
@@ -43,8 +43,8 @@ function validateAnswer(report, message, config) {
   
 function setTimer(message, currentReports, config) {
   return setTimeout(() => {
-	currentReports.delete(message.author.id);
-	handleMessageException(message.reply(config.timeout_message));
+	  currentReports.delete(message.author.id);
+	  handleMessageException(message.reply(config.timeout_message));
   }, config.reply_timeout_in_seconds * 1000);
 }
 
@@ -53,8 +53,8 @@ function saveAnswerAndRespondIfNeeded(report, message, newQuestion, config, curr
   clearTimeout(report.timeout);
   
   if (newQuestion) {
-	handleMessageException(message.reply(config.questions[report.current_question].question));
-	report.timeout = setTimer(message, currentReports, config);
+	  handleMessageException(message.reply(config.questions[report.current_question].question));
+	  report.timeout = setTimer(message, currentReports, config);
   }
   
   report.current_question += 1;
@@ -65,17 +65,17 @@ function handleAttachmentMessage(report, message, config) {
   if (message.attachments.size > 0) {
 	  for (let attachment of message.attachments.values()) {
 		  if (report.attachments_used !== config.max_attachments) {
-		    report.attachments[report.attachments_used] = attachment.url;
-			report.attachments_used += 1;
-			if (report.attachments_used === config.max_attachments) {
-		      handleMessageException(message.reply(config.max_attachments_reached));
-			  return false;
-			} else {
-			  handleMessageException(message.reply(config.uploaded_attachment.replace('%ATTACHMENTS_LEFT%', config.max_attachments - report.attachments_used)));	
-			}
+        report.attachments[report.attachments_used] = attachment.url;
+			  report.attachments_used += 1;
+			  if (report.attachments_used === config.max_attachments) {
+          handleMessageException(message.reply(config.last_attachment_reached));
+			    return false;
+			  } else {
+			    handleMessageException(message.reply(config.uploaded_attachment.replace('%ATTACHMENTS_LEFT%', config.max_attachments - report.attachments_used)));	
+			  }
 		  } else {
-			handleMessageException(message.reply(config.max_attachments_reached));
-			return false;
+			  handleMessageException(message.reply(config.max_attachments_reached));
+			  return false;
 		  }
 	  }
 	  
@@ -83,6 +83,10 @@ function handleAttachmentMessage(report, message, config) {
   }
   
   return true;
+}
+
+function validQuestion(report, message, config) {
+  return handleAttachmentMessage(report, message, config) && validateAnswer(report, message, config);
 }
 
 module.exports.handleCooldown = function(userTime, message, config) {
@@ -100,25 +104,29 @@ module.exports.handlePostReport = function(currentReports, usersOnCooldown, mess
   let report = currentReports.get(message.author.id);
 	
   if (report.current_question >= config.questions.length) {
-    saveAnswerAndRespondIfNeeded(report, message, false, config, currentReports);
-    handleMessageException(message.reply(config.goodbye_message.replace('%COOLDOWN%', config.report_cooldown_in_seconds)));
+    if (validQuestion(report, message, config)) {
+      saveAnswerAndRespondIfNeeded(report, message, false, config, currentReports);
+      handleMessageException(message.reply(config.goodbye_message.replace('%COOLDOWN%', config.report_cooldown_in_seconds)));
 	  
-	currentReports.delete(message.author.id);
+	    currentReports.delete(message.author.id);
 	  
-	handleMessageException(client.channels.get(config.channel_to_post_in).send(formattedReport(report, message.author.id, config)));
-	usersOnCooldown.set(message.author.id, Date.now());
-  } else if (handleAttachmentMessage(report, message, config) && validateAnswer(report, message, config)) {
-	saveAnswerAndRespondIfNeeded(report, message, true, config, currentReports);
+	    client.channels.cache.get(config.channel_to_post_in).send(formattedReport(report, message.author.id, config)).catch(() => {
+        handleMessageException(message.reply(config.error_message_sending_report));
+      });
+      usersOnCooldown.set(message.author.id, Date.now());
+    }
+  } else if (validQuestion(report, message, config)) {
+	  saveAnswerAndRespondIfNeeded(report, message, true, config, currentReports);
   }
 }
 
 module.exports.handleFirstBotReply = function(currentReports, message, config) {
   currentReports.set(message.author.id, {
-	current_question: 1,
-	answers: [config.questions.length],
-	timeout: setTimer(message, currentReports, config),
-	attachments_used: 0,
-	attachments: [config.max_attachments]
+	  current_question: 1,
+	  answers: [config.questions.length],
+	  timeout: setTimer(message, currentReports, config),
+	  attachments_used: 0,
+	  attachments: [config.max_attachments]
   });
 	  
   handleMessageException(message.reply(config.welcome_message.replace('%TIMEOUT%', config.reply_timeout_in_seconds) + '\n\n' + config.questions[0].question));

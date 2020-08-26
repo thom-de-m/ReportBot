@@ -17,19 +17,18 @@ client.login(config.token).then(() => {
 if (config.questions.length === 0) {
   console.log("Questions can't be empty!");
   process.exit(1);
-  return;
 }
 
 client.on('message', message => {
   if (message.channel.type != 'dm' || message.author.bot) return;
   if (usersOnCooldown.has(message.author.id)) {
-	let value = usersOnCooldown.get(message.author.id);
-	if (Date.now() - value >= config.report_cooldown_in_seconds * 1000) {
-	  usersOnCooldown.delete(message.author.id);
-	} else {
-	  report.handleCooldown(value, message, config);
-	  return;
-	}
+	  let value = usersOnCooldown.get(message.author.id);
+	  if (Date.now() - value >= config.report_cooldown_in_seconds * 1000) {
+	    usersOnCooldown.delete(message.author.id);
+	  } else {
+	    report.handleCooldown(value, message, config);
+	    return;
+	  }
   }
   
   if (currentReports.has(message.author.id)) report.handlePostReport(currentReports, usersOnCooldown, message, config, client);
@@ -39,6 +38,6 @@ client.on('message', message => {
 setInterval(() => {
   usersOnCooldown.forEach((value, key) => {
 	if (Date.now() - value < config.report_cooldown_in_seconds * 1000) return;
-	usersOnCooldown.delete(key);
+	  usersOnCooldown.delete(key);
   });
 }, 5000);

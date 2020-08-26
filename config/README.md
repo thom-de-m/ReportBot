@@ -11,12 +11,14 @@ When using this you **must create a config.json** in the **config directory**, j
 | report_cooldown_in_seconds | The timeout in seconds after which a user can report a new bug. |
 | uploaded_attachment | The message which will be displayed when a user has submitted an attachment. |
 | max_attachments_reached | The message which will be displayed when a user has reached the max amount of attachments for this report. |
+| last_attachment_reached | The message which will be displayed when a user has reached the last attachment they can submit for this report. |
 | attachments_message | The style for the message which will be displayed when an attachment is posted in the bug report. |
 | goodbye_message | The message which will be displayed when a bug report has been finished. |
 | timeout_message | The message which will be displayed when a user is taking too long to answer a question. |
 | submitted_by_message | The style for the message which will be displayed when the user posted a bug report. |
 | cooldown_message | The style for the message which will be displayed when the user is still on a cooldown. |
 | welcome_message | The style for the message which will be displayed when the user sends a message to report a new bug. |
+| error_message_sending_report | The error message when something goes wrong while creating the bug report, this most likely was caused by the user using too much text in their report. |
 | questions | The information needed in order to display a question. |
 | questions.question | The style for the message which will be displayed when the user is prompted a question. |
 | questions.display | The style for the message which will be displayed when the bug reported is posted. |

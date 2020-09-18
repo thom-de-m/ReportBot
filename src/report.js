@@ -100,6 +100,11 @@ module.exports.handleCooldown = function(userTime, message, config) {
   handleMessageException(message.reply(config.cooldown_message.replace('%COOLDOWN%', config.report_cooldown_in_seconds - parseInt(cooldown))));
 }
 
+module.exports.handleCancel = function(config, message, currentReports) {
+  handleMessageException(message.reply(config.cancel_executed_message));
+  currentReports.delete(message.author.id);
+}
+
 module.exports.handlePostReport = function(currentReports, usersOnCooldown, message, config, client) {
   let report = currentReports.get(message.author.id);
 	
@@ -129,5 +134,5 @@ module.exports.handleFirstBotReply = function(currentReports, message, config) {
 	  attachments: [config.max_attachments]
   });
 	  
-  handleMessageException(message.reply(config.welcome_message.replace('%TIMEOUT%', config.reply_timeout_in_seconds) + '\n\n' + config.questions[0].question));
+  handleMessageException(message.reply(config.welcome_message.replace('%TIMEOUT%', config.reply_timeout_in_seconds).replace('%CANCEL_COMMAND%', config.cancel_command) + '\n\n' + config.questions[0].question));
 }

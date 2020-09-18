@@ -1,6 +1,8 @@
 {
 	"token": "Your token!",
 	"channel_to_post_in": "Your channel!",
+	"cancel_command": "!cancel",
+	"cancel_executed_message": "You have cancelled your report! Please say \"hi\" to submit a new report.",
 	"max_attachments": 3,
 	"reply_timeout_in_seconds": 60,
 	"report_cooldown_in_seconds": 120,
@@ -12,7 +14,7 @@
 	"timeout_message": "**Cancelling bug report because time expired...**",
 	"submitted_by_message": "**Submitted by user:** %USER%\n\n**Send me a private message and say hi to report a bug!**",
 	"cooldown_message": "You're still on a cooldown for %COOLDOWN% seconds!",
-	"welcome_message": "Hello, in order to post your bug I will need some more information from you!\nI'll ask some questions and you may answer them if you like to.\n\nJust remember that you'll only have %TIMEOUT% seconds for every question, otherwise I'll close this DM!\nAlso you can upload an attachment at any question!",
+	"welcome_message": "Hello, in order to post your bug I will need some more information from you!\nI'll ask some questions and you may answer them if you like to.\n\nJust remember that you'll only have %TIMEOUT% seconds for every question, otherwise I'll close this DM!\nAlso you can upload an attachment at any question!\n\nTo cancel a report type **%CANCEL_COMMAND%**.",
 	"error_message_sending_report": "**Woops, something went wrong while sending your report. You probably used too much text!**",
 	"questions": [
 		{

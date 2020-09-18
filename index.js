@@ -31,7 +31,16 @@ client.on('message', message => {
 	  }
   }
   
-  if (currentReports.has(message.author.id)) report.handlePostReport(currentReports, usersOnCooldown, message, config, client);
+  if (currentReports.has(message.author.id)) {
+    // Back out if the user cancelled the report!
+    if (message.content.toLowerCase() === config.cancel_command.toLowerCase()) {
+      report.handleCancel(config, message, currentReports);
+      return;
+    }
+
+    // Handle the report answer.
+    report.handlePostReport(currentReports, usersOnCooldown, message, config, client);
+  } 
   else report.handleFirstBotReply(currentReports, message, config);
 });
 

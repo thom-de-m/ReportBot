@@ -34,7 +34,7 @@ client.on('message', message => {
   if (currentReports.has(message.author.id)) {
     // Back out if the user cancelled the report!
     if (message.content.toLowerCase() === config.cancel_command.toLowerCase()) {
-      report.handleCancel(config, message, currentReports);
+      report.handleCancel(config, message, currentReports, usersOnCooldown);
       return;
     }
 
@@ -46,7 +46,7 @@ client.on('message', message => {
 
 setInterval(() => {
   usersOnCooldown.forEach((value, key) => {
-	if (Date.now() - value < config.report_cooldown_in_seconds * 1000) return;
+	  if (Date.now() - value < config.report_cooldown_in_seconds * 1000) return;
 	  usersOnCooldown.delete(key);
   });
 }, 5000);

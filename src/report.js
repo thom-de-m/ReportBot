@@ -100,9 +100,11 @@ module.exports.handleCooldown = function(userTime, message, config) {
   handleMessageException(message.reply(config.cooldown_message.replace('%COOLDOWN%', config.report_cooldown_in_seconds - parseInt(cooldown))));
 }
 
-module.exports.handleCancel = function(config, message, currentReports) {
+module.exports.handleCancel = function(config, message, currentReports, usersOnCooldown) {
   handleMessageException(message.reply(config.cancel_executed_message));
+  clearTimeout(currentReports.get(message.author.id).timeout);
   currentReports.delete(message.author.id);
+  usersOnCooldown.delete(message.author.id);
 }
 
 module.exports.handlePostReport = function(currentReports, usersOnCooldown, message, config, client) {
